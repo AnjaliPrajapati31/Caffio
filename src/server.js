@@ -6,6 +6,7 @@ import morgan from "morgan";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
+import menuRoutes from "./routes/menu.routes.js";
 dotenv.config({});
 const app = express();
 
@@ -30,6 +31,7 @@ app.get("/health", (req, res) => {
 
 app.use("/api/authRoutes", authRoutes);
 app.use(errorHandler);
+app.use("/api/menu", menuRoutes);
 
 connectDB(); // comment this if you don't want to connect to DB
 
