@@ -16,11 +16,11 @@ export const registerUser=async (req,res)=>{
         password:hashedPassword,
         role
     });
-    return res.status(201).json({message:"User registered successfully"});
+    return res.status(201).json({message:"User registered successfully",role:newUser.role});
 }
 
 export const loginUser=async(req,res)=>{
-    const { email, password } = req.body;
+    const { email, password,role} = req.body;
     const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: "Invalid email or password" });
@@ -33,6 +33,6 @@ export const loginUser=async(req,res)=>{
 
     const token = createJwtToken(user.role);
 
-    return res.status(200).json({ message: "Login successful", token });
+    return res.status(200).json({ message: "Login successful", token, role: user.role });
 }
 
