@@ -18,7 +18,7 @@ export const validateSignup = async (req, res, next) => {
         if (!isValidEmail(email)) {
             return res.status(400).json({ message: "Invalid email address" });
         }
-        if(role!=='admin' && role!=='staff' && role!=='customer' ){
+        if(role=='admin' || role=='staff' ){
             return res.status(400).json({ message: "Invalid role" });
         }
         next();
