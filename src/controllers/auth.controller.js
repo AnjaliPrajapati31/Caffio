@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
+import { createJwtToken } from "../middlewares/auth.middleware.js";
 
 export const registerUser=async (req,res)=>{
     const { name, email, password, role} = req.body;
@@ -19,7 +20,7 @@ export const registerUser=async (req,res)=>{
 }
 
 export const loginUser=async(req,res)=>{
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
     const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: "Invalid email or password" });
@@ -29,8 +30,9 @@ export const loginUser=async(req,res)=>{
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-    
-    
-    return res.status(200).json({ message: "Login successful", user });
+
+    const token = createJwtToken(user.role);
+
+    return res.status(200).json({ message: "Login successful", token });
 }
 
