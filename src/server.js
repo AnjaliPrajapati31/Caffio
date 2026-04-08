@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import orderRoutes from "./routes/order.routes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
@@ -31,6 +32,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/authRoutes", authRoutes);
+app.use("/api/order", orderRoutes);
 app.use(errorHandler);
 app.use("/api/menu", menuRoutes);
 app.use("/api/staff", staffRoutes);
