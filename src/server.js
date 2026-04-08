@@ -35,6 +35,8 @@ app.use(errorHandler);
 app.use("/api/menu", menuRoutes);
 app.use("/api/staff", staffRoutes);
 
+
+
 connectDB(); // comment this if you don't want to connect to DB
 
 const PORT = process.env.PORT;
