@@ -29,9 +29,9 @@ export const validateSignup = async (req, res, next) => {
 
 export const validateLogin = async (req, res, next) => {
     try {
-        const { email, password, role} = req.body;
+        const { email, password} = req.body;
 
-        if (!email || !password || !role) {
+        if (!email || !password ) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
