@@ -1,13 +1,13 @@
 import jwt from "jsonwebtoken";
 
-export const createJwtToken = (role) => {
+export const createJwtToken = (id, role) => {
 	const secret = process.env.JWT_SECRET;
 
 	if (!secret) {
 		throw new Error("JWT_SECRET is not defined in .env");
 	}
 
-	return jwt.sign({ role }, secret, { expiresIn: "1d" });
+	return jwt.sign({ id, role }, secret, { expiresIn: "1d" });
 };
 
 export const authenticateToken = (req, res, next) => {
