@@ -13,7 +13,13 @@ const staffSchema =mongoose.Schema({
     password:{
         type:String,
         required:true,
-    }
+    },
+    assignedOrders:[
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: "Order"
+        }
+    ],
 })
 
 const Staff = mongoose.model("Staff",staffSchema);

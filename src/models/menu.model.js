@@ -12,6 +12,9 @@ const menuSchema = new mongoose.Schema({
     category: {
         type: String
     },
+    description: {
+        type: String
+    },
     image: {
         type: String
     }

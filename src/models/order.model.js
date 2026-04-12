@@ -34,7 +34,7 @@ const orderSchema = new mongoose.Schema(
 
     assignedStaffId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Staff",
         default: null
     },
 

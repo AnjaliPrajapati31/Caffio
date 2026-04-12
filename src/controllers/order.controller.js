@@ -1,5 +1,6 @@
 import Order from "../models/order.model.js";
 import Menu from "../models/menu.model.js";
+import Staff from "../models/staff.model.js";
 
 export const placeOrder = async (req, res) => {
     try {
@@ -39,40 +40,56 @@ export const getAllOrders = async (req, res) => {
 };
 
 export const assignOrder = async (req, res) => {
-    const { staffId } = req.body;
+    try {
+        const { staffId } = req.body;
+        const { id: orderId } = req.params;
 
-    const order = await Order.findByIdAndUpdate(
-        req.params.id,
-        {
-            assignedStaffId: staffId,
-            status: "Assigned"
-        },
-        { new: true }
-    );
+        if (!staffId) {
+            return res.status(400).json({ message: "staffId is required" });
+        }
 
-    res.json(order);
-};
+        const [order, staff] = await Promise.all([
+            Order.findById(orderId),
+            Staff.findById(staffId)
+        ]);
 
-export const updateOrderStatus = async (req, res) => {
-    const { status } = req.body;
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
 
-    const order = await Order.findByIdAndUpdate(
-        req.params.id,
-        { status },
-        { new: true }
-    );
+        if (!staff) {
+            return res.status(404).json({ message: "Staff not found" });
+        }
 
-    res.json(order);
+        const previousStaffId = order.assignedStaffId ? order.assignedStaffId.toString() : null;
+        const nextStaffId = staff._id.toString();
+
+        if (previousStaffId && previousStaffId !== nextStaffId) {
+            await Staff.findByIdAndUpdate(previousStaffId, {
+                $pull: { assignedOrders: order._id }
+            });
+        }
+
+        order.assignedStaffId = staff._id;
+        order.status = "Assigned";
+        await order.save();
+
+        await Staff.findByIdAndUpdate(staff._id, {
+            $addToSet: { assignedOrders: order._id }
+        });
+
+        const populatedOrder = await Order.findById(order._id)
+            .populate("customerId", "name email")
+            .populate("assignedStaffId", "name email");
+
+        return res.status(200).json(populatedOrder);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 };
 
 export const getMyOrders = async (req, res) => {
     const orders = await Order.find({ customerId: req.user.id });
-
-    res.json(orders);
-};
-
-export const getStaffOrders = async (req, res) => {
-    const orders = await Order.find({ assignedStaffId: req.user.id });
 
     res.json(orders);
 };

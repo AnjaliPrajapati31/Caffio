@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.routes.js";
 import menuRoutes from "./routes/menu.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import staffRoutes from "./routes/staff.routes.js";
+import attendanceRoutes from "./routes/attendance.routes.js";
 
 dotenv.config({});
 const app = express();
@@ -39,6 +40,7 @@ app.use(errorHandler);
 app.use("/api/menu", menuRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/staff", staffRoutes);
+app.use("/api/attendance", attendanceRoutes);
 
 
 
