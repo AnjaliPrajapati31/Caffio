@@ -27,6 +27,7 @@ export const validateSignup = async (req, res, next) => {
     }
 };
 
+
 export const validateLogin = async (req, res, next) => {
     try {
         const { email, password} = req.body;
