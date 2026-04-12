@@ -49,7 +49,7 @@ export const loginStaff=async(req,res)=>{
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
-    const token = createJwtToken(user._id, user.role);
+    const token = createJwtToken(user._id, "staff");
 
-    return res.status(200).json({ message: "Login successful", token, role: user.role });
+    return res.status(200).json({ message: "Login successful", token, role: "staff" });
 }
