@@ -34,7 +34,7 @@ export const loginUser=async(req,res)=>{
 
     const token = createJwtToken(user._id, user.role);
 
-    return res.status(200).json({ message: "Login successful", token, role: user.role });
+    return res.status(200).json({ message: "Login successful", token, role: user.role, id: user._id  });
 }
 
 export const loginStaff = async (req, res) => {

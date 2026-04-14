@@ -4,7 +4,7 @@ import Staff from "../models/staff.model.js";
 
 export const placeOrder = async (req, res) => {
     try {
-        const { items } = req.body;
+        const { items, paymentStatus } = req.body;
 
         let total = 0;
 
@@ -21,7 +21,8 @@ export const placeOrder = async (req, res) => {
         const order = await Order.create({
             customerId: req.user.id,
             items,
-            totalAmount: total
+            totalAmount: total,
+            paymentStatus
         });
 
         res.status(201).json(order);
@@ -89,7 +90,7 @@ export const assignOrder = async (req, res) => {
 };
 
 export const getMyOrders = async (req, res) => {
-    const orders = await Order.find({ customerId: req.user.id });
-
+    const orders = await Order.find({ customerId: req.user.id })
+    .populate("items.menuItem");
     res.json(orders);
 };
