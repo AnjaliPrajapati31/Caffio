@@ -37,19 +37,40 @@ export const loginUser=async(req,res)=>{
     return res.status(200).json({ message: "Login successful", token, role: user.role });
 }
 
-export const loginStaff=async(req,res)=>{
-    const { email, password} = req.body;
-    const user = await Staff.findOne({ email });
+export const loginStaff = async (req, res) => {
+    try {
+        console.log("BODY RECEIVED:", req.body);
+
+        const { email, password } = req.body;
+
+        const user = await Staff.findOne({ email });
+
+        console.log("USER FOUND:", user);
+
         if (!user) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-     
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        console.log("PASSWORD MATCH:", isPasswordValid);
+
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
-    const token = createJwtToken(user._id, "staff");
+        const token = createJwtToken(user._id, user.role);
 
-    return res.status(200).json({ message: "Login successful", token, role: "staff" });
-}
+        console.log("TOKEN CREATED");
+
+        return res.status(200).json({
+            message: "Login successful",
+            token,
+            role: user.role
+        });
+
+    } catch (error) {
+        console.log("LOGIN ERROR:", error.message);
+        return res.status(500).json({ message: error.message });
+    }
+};

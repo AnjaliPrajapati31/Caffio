@@ -101,6 +101,21 @@ export const updateOrderStatus = async (req, res) => {
 
         // 🔹 ADMIN LOGIC
         else if (userRole === "admin") {
+        const allowedTransitions = {
+    Assigned: ["Preparing"],
+    Preparing: ["Ready"],
+    Ready: ["Completed"],
+    Completed: []
+};
+
+if (!allowedTransitions[order.status].includes(normalizedStatus)) {
+    return res.status(400).json({
+        message: `Cannot change status from ${order.status} to ${normalizedStatus}`
+    });
+}
+
+order.status = normalizedStatus;
+await order.save();
 
             order = await Order.findById(orderId);
 
@@ -142,4 +157,21 @@ export const updateOrderStatus = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
+}
+
+export const getStaffProfile = async (req, res) => {
+  try {
+    const staffId = req.user.id;
+
+    const staff = await Staff.findById(staffId).select("-password");
+
+    if (!staff) {
+      return res.status(404).json({ message: "Staff not found" });
+    }
+
+    return res.status(200).json(staff);
+
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };

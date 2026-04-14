@@ -16,7 +16,6 @@ const staffSchema =mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["staff"],
         default: "staff"
     },
     assignedOrders:[
@@ -24,7 +23,13 @@ const staffSchema =mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId, 
             ref: "Order"
         }
+    
     ],
+    personalDetails: {
+        phoneNumber: String,
+        joinDate: Date,
+        shift: String
+    },
 })
 
 const Staff = mongoose.model("Staff",staffSchema);

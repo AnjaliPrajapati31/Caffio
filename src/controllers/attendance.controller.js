@@ -95,3 +95,16 @@ export const getAllStaffAttendance = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+export const getMyAttendance = async (req, res) => {
+    try {
+        const staffId = req.user.id;
+
+        const records = await Attendance.find({ staffId }).sort({ date: -1 });
+
+        return res.status(200).json(records);
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
